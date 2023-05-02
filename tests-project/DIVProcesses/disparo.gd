@@ -12,4 +12,4 @@ func process():
 		if(id_col):
 			id_col.action = -1
 			break
-		await get_tree().process_frame
+		await frame()

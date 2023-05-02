@@ -134,12 +134,13 @@ func setup_collider():
 func set_fps(fps_target, _skip):
 	Engine.set_max_fps(fps_target)
 	
-#func frame():
-#	print("This happened")
-#	if not get_tree():
-#		await get_tree().createtimer(0.1).timeout
-#		return
-#	await get_tree().idle_frame
+func frame(frames = 1):
+	if not get_tree():
+		await get_tree().createtimer(0.1).timeout
+		return
+	while frames > 0:
+		frames -= 1
+		await get_tree().process_frame
 
 func update_godot_values_from_div_values():
 	node_iterator = 0
