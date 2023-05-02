@@ -1,0 +1,8 @@
+[gd_scene load_steps=3 format=3 uid="uid://cqatenneqqtwe"]
+
+[ext_resource type="Texture2D" uid="uid://b1dqra7destwy" path="res://2.png" id="1_eygh4"]
+[ext_resource type="Script" path="res://DIVProcesses/disparo.gd" id="2_f7kkf"]
+
+[node name="disparo" type="Sprite2D"]
+texture = ExtResource("1_eygh4")
+script = ExtResource("2_f7kkf")

@@ -1,0 +1,8 @@
+[gd_scene load_steps=3 format=3 uid="uid://dut1o7x52qssi"]
+
+[ext_resource type="Texture2D" uid="uid://dxdmut0jqr7k1" path="res://1.png" id="1_68ky1"]
+[ext_resource type="Script" path="res://DIVProcesses/nave.gd" id="2_hwygs"]
+
+[node name="nave" type="Sprite2D"]
+texture = ExtResource("1_68ky1")
+script = ExtResource("2_hwygs")

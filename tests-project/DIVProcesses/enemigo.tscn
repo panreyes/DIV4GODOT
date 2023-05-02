@@ -1,0 +1,8 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Texture2D" uid="uid://baq3ggfm6dvdl" path="res://3.png" id="1_b7s5p"]
+[ext_resource type="Script" path="res://DIVProcesses/enemigo.gd" id="2_hdsng"]
+
+[node name="enemigo" type="Sprite2D"]
+texture = ExtResource("1_b7s5p")
+script = ExtResource("2_hdsng")
