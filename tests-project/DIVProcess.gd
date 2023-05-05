@@ -6,15 +6,25 @@ class_name DIVProcess
 @export var instance_name = ""
 @export var id := 0
 
-@export var action : int = 0;
-@export var x : float = 0;
-@export var y : float = 0;
+# FIXME: Mirar cómo resolver ésto!
+@export var action : int = 0
+@export var file = ""
+@export var graph = 0
+@export var x : float = 0.0;
+@export var y : float = 0.0;
 @export var z : int = 0;
-@export var alpha : float = 255;
-@export var size : float = 100;
-@export var size_x : float = 100;
-@export var size_y : float = 100;
-@export var angle : float = 0;
+@export var alpha : float = 255.0;
+@export var size : float = 100.0;
+@export var size_x : float = 100.0;
+@export var size_y : float = 100.0;
+@export var angle : float = 0.0;
+@export var flags : int = 0
+@export var animation := ""
+
+# Private local variables
+var _file_previous = ""
+var _graph_previous = 0
+var _animation_previous = ""
 
 #var args := {}
 # Ugly, but necessary. No variadic functions!
@@ -31,6 +41,7 @@ enum { on_press = 1, on_release = 2 }
 #onready var sprite = Sprite2D.new()
 @onready var sprite = self
 @onready var area = Area2D.new()
+var animated_sprite
 
 var node_iterator: int = 0
 var node_iterator_last_type := ""
@@ -39,14 +50,18 @@ var node_iterator_last_type := ""
 #define Frame(); await get_tree().idle_frame
 
 func _ready():
-	fetch_status_from_node()
+	fetch_properties_from_node()
+	fetch_div_locals_from_node() #DIV locals properties have priority over node properties
 	if(has_method("init")):
 		var parms = args
 		
 		for method in get_script().get_script_method_list():
 			if method.name == "init":
-				for i in range(9, len(method.args), -1):
-					parms.pop_back()
+				if len(method.args) > 0:
+					for i in range(9, len(method.args), -1):
+						parms.pop_back()
+				else:
+					parms = {}
 		
 		if len(parms) == 0:
 			await call("init")
@@ -55,11 +70,12 @@ func _ready():
 	
 	update_godot_values_from_div_values()
 	
-	process_type = get_scene_file_path().get_file().get_basename()
 	if process_type == "":
-		process_type = get_name()
-	else:
-		DIVProcessScenes.add_divprocess(get_scene_file_path())
+		process_type = get_scene_file_path().get_file().get_basename()
+		if process_type == "":
+			process_type = get_name()
+		else:
+			DIVProcessScenes.add_divprocess(get_scene_file_path())
 	
 	instance_name = get_name()
 	id = get_instance_id()
@@ -81,7 +97,19 @@ func _ready():
 func set_args(_args):
 	args = _args
 
-func fetch_status_from_node():
+func fetch_div_locals_from_node():
+	# Only update them if they're set from the editor
+	if action == null: action = 0
+	if x == null: x = 0.0
+	if y == null: y = 0.0
+	if z == null: z = 0
+	if alpha == null: alpha = 255.0
+	if size == null: size = 100.0
+	if size_x == null: size_x = 100.0
+	if size_y == null: size_y = 100.0
+	if angle == null: angle = 0.0
+
+func fetch_properties_from_node():
 	x = position.x
 	y = position.y
 	z = z_index
@@ -104,17 +132,21 @@ func collision(target_process_type):
 	
 	return null
 
-func setup_collider():
+func setup_collider():	
+	# If there's a CollisionPolygon2D or CollisionXXXXX, use it
+	for child in get_children():
+		if child is CollisionPolygon2D:
+			remove_child(child)
+			area.add_child(child)
+			return
+	
 	if(!sprite.texture):
 		print("Could not generate collider, it has no sprite. Process type ", process_type)
 		return
 	
 	var bm = BitMap.new()
 	bm.create_from_image_alpha(sprite.texture.get_image())
-	
-	# Debugging
-	#get_tree().set_debug_collisions_hint(true)
-	
+
 	var rect = Rect2(Vector2.ZERO, sprite.texture.get_size())
 	var my_array = bm.opaque_to_polygons(rect)
 	if my_array.is_empty():
@@ -129,7 +161,6 @@ func setup_collider():
 	# Shape centered
 	col_polygon.position -= (sprite.texture.get_size() / 2)
 	area.add_child(col_polygon)
-	#area.collision_shape = col_polygon
 
 func set_fps(fps_target, _skip):
 	Engine.set_max_fps(fps_target)
@@ -158,9 +189,32 @@ func update_godot_values_from_div_values():
 	if scale.x < 0 or scale.y < 0:
 		scale.x = 0
 		scale.y = 0
+	
+	if flags == 1 or flags == 3:
+		scale.x = -scale.x
+	
+	if flags == 2 or flags == 3:
+		scale.y = -scale.y
 
 func _process(_delta):
+	if !animated_sprite:
+		update_graph()
+	update_animation()
 	update_godot_values_from_div_values()
+
+func update_animation():
+	if animation != _animation_previous:
+		_animation_previous = animation
+		
+		if !animated_sprite:
+			#sprite.visible = 0
+			sprite.texture = null
+			animated_sprite = AnimatedSprite2D.new()
+			add_child(animated_sprite)
+			sprite = animated_sprite #testing
+		
+		animated_sprite.set_sprite_frames(DIVAssets.get_animation(file))
+		animated_sprite.play(animation)
 
 func key(key_name, event = 0):
 	if event == 0:
@@ -171,11 +225,22 @@ func key(key_name, event = 0):
 		return Input.is_action_just_released(key_name)
 
 func process_fade_off(speed):
-	for alpha in range(alpha, 0, speed):
+	for i in range(alpha, 0, speed):
+		alpha = i
 		angle += 3000
 		size -= 3
 		#frame()
 		await get_tree().process_frame
+
+func exists(type):
+	var nodes = get_tree().get_nodes_in_group(type)
+	
+	for node in nodes:
+		if node.action >= 0:
+			return true
+	
+	return false
+
 
 func get_id(type):
 	var nodes = get_tree().get_nodes_in_group(type)
@@ -192,3 +257,21 @@ func get_id(type):
 			iterations += 1
 			if iterations == node_iterator:
 				return node
+
+func play_music(music, repeats):
+	DIVAssets.play_music(music, repeats)
+
+func play_sound(sound, repeats):
+	DIVAssets.play_sound(sound, repeats)
+
+func update_graph():
+	var changed := false
+	if _file_previous != file:
+		_file_previous = file
+		changed = true
+	if _graph_previous != graph:
+		_graph_previous = graph
+		changed = true
+	
+	if changed:
+		texture = DIVAssets.get_graph_texture(file, str(graph))

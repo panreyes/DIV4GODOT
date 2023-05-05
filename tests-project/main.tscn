@@ -1,18 +1,44 @@
-[gd_scene load_steps=4 format=3 uid="uid://cy4b3a26fp3na"]
+[gd_scene load_steps=6 format=3 uid="uid://cy4b3a26fp3na"]
 
 [ext_resource type="Script" path="res://main.gd" id="1_hiajg"]
+[ext_resource type="Texture2D" uid="uid://dkmeta7ws4bs5" path="res://DIV/fpg/pixpang/1.png" id="2_0s0nl"]
+[ext_resource type="Script" path="res://DIVProcess.gd" id="2_ejbi7"]
 [ext_resource type="PackedScene" uid="uid://dut1o7x52qssi" path="res://DIVProcesses/nave.tscn" id="3_4e3y1"]
-[ext_resource type="Texture2D" uid="uid://h5teb7sgvma6" path="res://4.png" id="5_yyjp2"]
+[ext_resource type="Texture2D" uid="uid://qu5hnkcngsce" path="res://DIV/fpg/pix/501.png" id="4_3rtbr"]
 
-[node name="Node2D" type="Node2D"]
+[node name="Node2D" type="Sprite2D"]
 script = ExtResource("1_hiajg")
 
-[node name="fondo" type="Sprite2D" parent="."]
-position = Vector2(640, 360)
-texture = ExtResource("5_yyjp2")
+[node name="left_wall" type="Sprite2D" parent="."]
+position = Vector2(635, 449)
+script = ExtResource("2_ejbi7")
+process_type = "wall"
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="left_wall"]
+position = Vector2(-635, -449)
+polygon = PackedVector2Array(254, -43, 257, 865, 236, 881, 236, -44)
+
+[node name="right_wall" type="Sprite2D" parent="."]
+position = Vector2(635, 449)
+script = ExtResource("2_ejbi7")
+process_type = "wall"
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="right_wall"]
+position = Vector2(-635, -449)
+polygon = PackedVector2Array(1015, 855, 1016, -34, 1037, -38, 1038, 870)
+
+[node name="ground" type="Sprite2D" parent="."]
+position = Vector2(635, 449)
+texture = ExtResource("2_0s0nl")
+script = ExtResource("2_ejbi7")
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="ground"]
+position = Vector2(-635, -449)
+polygon = PackedVector2Array(1041, 686, 1038, 709, 232, 711, 233, 687)
 
 [node name="nave" parent="." instance=ExtResource("3_4e3y1")]
 position = Vector2(640, 640)
+texture = ExtResource("4_3rtbr")
 
 [node name="RichTextLabel" type="RichTextLabel" parent="."]
 offset_left = 17.0
