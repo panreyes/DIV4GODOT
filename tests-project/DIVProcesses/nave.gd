@@ -16,12 +16,12 @@ func process():
 		# Handle movement
 		if shooting_delay <= 0:
 			if(key(_left)):
-				x -= 5
+				if !collision("wall_left"): x -= 5
 				#graph = 503
 				animation = "walk"
 				flags = 1
 			elif(key(_right)):
-				x += 5
+				if !collision("wall_right"): x += 5
 				#graph = 503
 				animation = "walk"
 				flags = 0

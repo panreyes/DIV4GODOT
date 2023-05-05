@@ -159,7 +159,7 @@ func setup_collider():
 	col_polygon.set_polygon(polygon2D.polygons[0])
 	
 	# Shape centered
-	col_polygon.position -= (sprite.texture.get_size() / 2)
+	col_polygon.position += (-sprite.texture.get_size() / 2) + sprite.offset
 	area.add_child(col_polygon)
 
 func set_fps(fps_target, _skip):

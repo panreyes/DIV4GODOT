@@ -4,7 +4,7 @@ const gravity := 0.2
 var x_inc := 2.5
 var y_inc := -3.0
 var direction := 1
-var minimum_bounce := 6.5
+var minimum_bounce := 8
 
 func init(_x,_y,_size, _direction):
 	x = _x

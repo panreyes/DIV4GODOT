@@ -15,8 +15,8 @@ script = ExtResource("2_ejbi7")
 process_type = "wall"
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="left_wall"]
-position = Vector2(-635, -449)
-polygon = PackedVector2Array(254, -43, 257, 865, 236, 881, 236, -44)
+position = Vector2(-771, -449)
+polygon = PackedVector2Array(254, -43, 257, 865, 211, 863, 222, -52)
 
 [node name="right_wall" type="Sprite2D" parent="."]
 position = Vector2(635, 449)
@@ -24,11 +24,12 @@ script = ExtResource("2_ejbi7")
 process_type = "wall"
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="right_wall"]
-position = Vector2(-635, -449)
-polygon = PackedVector2Array(1015, 855, 1016, -34, 1037, -38, 1038, 870)
+position = Vector2(-490, -454)
+polygon = PackedVector2Array(1015, 855, 1016, -34, 1050, -35, 1050, 862)
 
 [node name="ground" type="Sprite2D" parent="."]
-position = Vector2(635, 449)
+position = Vector2(640, 360)
+scale = Vector2(1.37023, 1.37023)
 texture = ExtResource("2_0s0nl")
 script = ExtResource("2_ejbi7")
 
@@ -37,7 +38,8 @@ position = Vector2(-635, -449)
 polygon = PackedVector2Array(1041, 686, 1038, 709, 232, 711, 233, 687)
 
 [node name="nave" parent="." instance=ExtResource("3_4e3y1")]
-position = Vector2(640, 640)
+position = Vector2(640, 621)
+scale = Vector2(1.37, 1.37)
 texture = ExtResource("4_3rtbr")
 
 [node name="RichTextLabel" type="RichTextLabel" parent="."]
