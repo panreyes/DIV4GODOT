@@ -94,7 +94,8 @@ if id_collision:
 
 To avoid duplicating those lines, I added a local named `last_collided_node`, so now we can do this:
 ```if collision("process_type"):
-   last_collided_node.action = -1```
+   last_collided_node.action = -1
+```
 
 ### "Families" (son, father, brother, etc...)
 Because of how GDScript works, I found no way to replace those behaviours.
