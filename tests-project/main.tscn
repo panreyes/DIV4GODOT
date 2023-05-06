@@ -1,13 +1,19 @@
-[gd_scene load_steps=6 format=3 uid="uid://cy4b3a26fp3na"]
+[gd_scene load_steps=6 format=3 uid="uid://pqccoqo1n5tc"]
 
 [ext_resource type="Script" path="res://main.gd" id="1_hiajg"]
 [ext_resource type="Texture2D" uid="uid://dkmeta7ws4bs5" path="res://DIV/fpg/pixpang/1.png" id="2_0s0nl"]
 [ext_resource type="Script" path="res://DIVProcess.gd" id="2_ejbi7"]
+[ext_resource type="Texture2D" uid="uid://bdtv2tof6lnyn" path="res://notdivstuff/background.png" id="2_q0xg7"]
 [ext_resource type="PackedScene" uid="uid://dut1o7x52qssi" path="res://DIVProcesses/nave.tscn" id="3_4e3y1"]
-[ext_resource type="Texture2D" uid="uid://qu5hnkcngsce" path="res://DIV/fpg/pix/501.png" id="4_3rtbr"]
 
 [node name="Node2D" type="Sprite2D"]
 script = ExtResource("1_hiajg")
+
+[node name="background" type="Sprite2D" parent="."]
+z_index = -100
+position = Vector2(640, 360)
+scale = Vector2(1.37, 1.37)
+texture = ExtResource("2_q0xg7")
 
 [node name="left_wall" type="Sprite2D" parent="."]
 position = Vector2(635, 449)
@@ -17,6 +23,14 @@ process_type = "wall"
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="left_wall"]
 position = Vector2(-771, -449)
 polygon = PackedVector2Array(254, -43, 257, 865, 211, 863, 222, -52)
+
+[node name="ceiling" type="Sprite2D" parent="."]
+position = Vector2(635, 449)
+script = ExtResource("2_ejbi7")
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="ceiling"]
+position = Vector2(-771, -449)
+polygon = PackedVector2Array(1336, 2, 1336, 36, 224, 30, 219, 2)
 
 [node name="right_wall" type="Sprite2D" parent="."]
 position = Vector2(635, 449)
@@ -40,10 +54,10 @@ polygon = PackedVector2Array(1041, 686, 1038, 709, 232, 711, 233, 687)
 [node name="nave" parent="." instance=ExtResource("3_4e3y1")]
 position = Vector2(640, 621)
 scale = Vector2(1.37, 1.37)
-texture = ExtResource("4_3rtbr")
 
 [node name="RichTextLabel" type="RichTextLabel" parent="."]
 offset_left = 17.0
 offset_top = 25.0
 offset_right = 57.0
 offset_bottom = 65.0
+metadata/_edit_use_anchors_ = true

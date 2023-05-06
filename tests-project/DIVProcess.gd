@@ -20,6 +20,7 @@ class_name DIVProcess
 @export var angle : float = 0.0;
 @export var flags : int = 0
 @export var animation := ""
+@export var pausable := true
 
 # Private local variables
 var _file_previous = ""
@@ -46,8 +47,8 @@ var animated_sprite
 var node_iterator: int = 0
 var node_iterator_last_type := ""
 
-# I wish I could define this macro, or make it a function
-#define Frame(); await get_tree().idle_frame
+var last_collided_node
+
 
 func _ready():
 	fetch_properties_from_node()
@@ -124,10 +125,12 @@ func fetch_properties_from_node():
 		size_y = scale.y * 100
 
 func collision(target_process_type):
+	last_collided_node = null
 	for body in area.get_overlapping_areas():
 		var node = body.get_parent()
 		if (node.process_type):
-			if node.process_type == target_process_type:
+			if node.process_type == target_process_type or node.instance_name == target_process_type:
+				last_collided_node = node
 				return node
 	
 	return null
@@ -170,6 +173,13 @@ func frame(frames = 1):
 		await get_tree().createtimer(0.1).timeout
 		return
 	while frames > 0:
+		if DIVGlobals.game_paused and pausable:
+			if animated_sprite:
+				animated_sprite.pause()
+			while DIVGlobals.game_paused:
+				await get_tree().process_frame
+			if animated_sprite:
+				animated_sprite.play()
 		frames -= 1
 		await get_tree().process_frame
 
@@ -211,6 +221,7 @@ func update_animation():
 			sprite.texture = null
 			animated_sprite = AnimatedSprite2D.new()
 			add_child(animated_sprite)
+			animated_sprite.offset = sprite.offset
 			sprite = animated_sprite #testing
 		
 		animated_sprite.set_sprite_frames(DIVAssets.get_animation(file))

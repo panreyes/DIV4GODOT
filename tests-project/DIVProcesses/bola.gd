@@ -22,16 +22,14 @@ func process():
 			# FIXME:
 			#print(y_inc)
 		
-		id_col = collision("wall")
-		if id_col:
-			if id_col.x < x:
+		if collision("wall"):
+			if last_collided_node.x < x:
 				direction = -1
 			else:
 				direction = 1
 		
-		id_col = collision("disparo")
-		if id_col:
-			id_col.action = -1
+		if collision("disparo"):
+			last_collided_node.action = -1
 			play_sound("2",0)
 			if size > 20:
 				DIV.bola(x-10, y, size - 20, -1)

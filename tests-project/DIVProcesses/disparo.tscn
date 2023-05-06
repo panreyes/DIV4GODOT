@@ -4,6 +4,7 @@
 [ext_resource type="Script" path="res://DIVProcesses/disparo.gd" id="2_f7kkf"]
 
 [node name="disparo" type="Sprite2D"]
+scale = Vector2(1.37, 1.37)
 texture = ExtResource("1_j0rbj")
 offset = Vector2(0, 280)
 script = ExtResource("2_f7kkf")
