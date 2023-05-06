@@ -82,6 +82,25 @@ And how do the collisions work? Instead of using signals and callbacks, we check
 `collision("process_type | process_instance")`
 If successful, it returns the colliding node. We can use this for a type of elements ("enemy") or a certain instance ("enemy23"). We could also check for multiple collisions 
 
+Because GDScript does not support to assign in an condition sentence, we cannot do this:
+```if id_collision = collision("process_type"):
+   id_collision.action = -1
+```
+And we would be required to do this everytime:
+```id_collision = collision("process_type")
+if id_collision:
+   id_collision.action = -1
+```
+
+To avoid duplicating those lines, I added a local named `last_collided_node`, so now we can do this:
+```if collision("process_type"):
+   last_collided_node.action = -1```
+
+### "Families" (son, father, brother, etc...)
+Because of how GDScript works, I found no way to replace those behaviours.
+In DIV Games Studio, if you instanced a process, the locals `son` and `father` would be accordingly updated to reference each process.
+In Godot, you can achieve the same but not automatically, it requires getting the caller node from a parameter.
+
 ### To be continued
 I just started developing this framework. For current Godot users this methodology is probably not very practical, but it has its advantages and conveniences, specially for small arcade games.
 
