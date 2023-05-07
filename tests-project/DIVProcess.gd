@@ -6,7 +6,6 @@ class_name DIVProcess
 @export var instance_name = ""
 @export var id := 0
 
-# FIXME: Mirar cómo resolver ésto!
 @export var action : int = 0
 @export var file = ""
 @export var graph = 0

@@ -13,9 +13,7 @@ func init(_x,_y,_size, _direction):
 	direction = _direction
 
 func process():
-	var id_col
-	
-	while action > -1:	
+	while action > -1:
 		if collision("ground"):
 			y_inc = -absf(y_inc)
 			y_inc = min(y_inc, -minimum_bounce)
@@ -28,12 +26,12 @@ func process():
 			else:
 				direction = 1
 		
-		if collision("disparo"):
+		if collision("bullet"):
 			last_collided_node.action = -1
 			play_sound("2",0)
 			if size > 20:
-				DIV.bola(x-10, y, size - 20, -1)
-				DIV.bola(x+10, y, size - 20, 1)
+				DIV.ball(x-10, y, size - 20, -1)
+				DIV.ball(x+10, y, size - 20, 1)
 			break
 		
 		y_inc += gravity

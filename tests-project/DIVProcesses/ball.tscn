@@ -1,9 +1,9 @@
 [gd_scene load_steps=3 format=3 uid="uid://b0lumppvh6akv"]
 
 [ext_resource type="Texture2D" uid="uid://boddpnqhu0jyt" path="res://DIV/fpg/pixpang/705.png" id="1_64tre"]
-[ext_resource type="Script" path="res://DIVProcesses/bola.gd" id="2_057v3"]
+[ext_resource type="Script" path="res://DIVProcesses/ball.gd" id="2_057v3"]
 
-[node name="bola" type="Sprite2D"]
+[node name="ball" type="Sprite2D"]
 scale = Vector2(1.37, 1.37)
 texture = ExtResource("1_64tre")
 script = ExtResource("2_057v3")

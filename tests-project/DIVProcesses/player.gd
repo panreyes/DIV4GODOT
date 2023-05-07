@@ -35,14 +35,14 @@ func player_playing():
 		if(key(_space, on_press)):
 			for i in 2:
 				if !exists(bullets[i]):
-					bullets[i] = DIV.disparo(x,y)
+					bullets[i] = DIV.bullet(x,y)
 					break
 			animation = "shooting"
 			shooting_delay = 6
 	else:
 		shooting_delay -= 1
 	
-	if collision("bola"):
+	if collision("ball"):
 		if last_collided_node.x > x: flags = 1
 		else: flags = 0
 		action = -1

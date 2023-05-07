@@ -15,8 +15,8 @@ func process():
 	while 1:
 		$fps_text.text = str(Engine.get_frames_per_second())
 		
-		if !exists("bola"):
-			DIV.bola(640, 300, 100, 1)
+		if !exists("ball"):
+			DIV.ball(640, 300, 100, 1)
 		
 		await frame()
 

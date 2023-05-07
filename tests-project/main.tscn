@@ -4,7 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://dkmeta7ws4bs5" path="res://DIV/fpg/pixpang/1.png" id="2_0s0nl"]
 [ext_resource type="Script" path="res://DIVProcess.gd" id="2_ejbi7"]
 [ext_resource type="Texture2D" uid="uid://bdtv2tof6lnyn" path="res://notdivstuff/background.png" id="2_q0xg7"]
-[ext_resource type="PackedScene" uid="uid://dut1o7x52qssi" path="res://DIVProcesses/nave.tscn" id="3_4e3y1"]
+[ext_resource type="PackedScene" uid="uid://dut1o7x52qssi" path="res://DIVProcesses/player.tscn" id="3_4e3y1"]
 
 [node name="Node2D" type="Sprite2D"]
 script = ExtResource("1_hiajg")
@@ -51,8 +51,8 @@ script = ExtResource("2_ejbi7")
 position = Vector2(-635, -449)
 polygon = PackedVector2Array(1041, 686, 1038, 709, 232, 711, 233, 687)
 
-[node name="nave" parent="." instance=ExtResource("3_4e3y1")]
-position = Vector2(640, 621)
+[node name="player" parent="." instance=ExtResource("3_4e3y1")]
+position = Vector2(640, 622)
 scale = Vector2(1.37, 1.37)
 
 [node name="fps_text" type="RichTextLabel" parent="."]

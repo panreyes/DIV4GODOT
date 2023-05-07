@@ -1,9 +1,9 @@
 [gd_scene load_steps=3 format=3 uid="uid://cqatenneqqtwe"]
 
 [ext_resource type="Texture2D" uid="uid://dxmf00txugspl" path="res://DIV/fpg/pix/601.png" id="1_j0rbj"]
-[ext_resource type="Script" path="res://DIVProcesses/disparo.gd" id="2_f7kkf"]
+[ext_resource type="Script" path="res://DIVProcesses/bullet.gd" id="2_f7kkf"]
 
-[node name="disparo" type="Sprite2D"]
+[node name="bullet" type="Sprite2D"]
 scale = Vector2(1.37, 1.37)
 texture = ExtResource("1_j0rbj")
 offset = Vector2(0, 280)
