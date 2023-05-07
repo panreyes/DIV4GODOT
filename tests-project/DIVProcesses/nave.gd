@@ -1,6 +1,7 @@
 extends DIVProcess
 
 var shooting_delay := 0
+var bullets = [ null, null ]
 
 func process():
 	file = "pix"
@@ -32,7 +33,10 @@ func player_playing():
 		
 		# Handle bullets
 		if(key(_space, on_press)):
-			DIV.disparo(x,y)
+			for i in 2:
+				if !exists(bullets[i]):
+					bullets[i] = DIV.disparo(x,y)
+					break
 			animation = "shooting"
 			shooting_delay = 6
 	else:
@@ -49,16 +53,17 @@ func player_defeated_sequence():
 	var y_inc
 	var x_inc
 	
-	# If player dies, we pause the game, blink the screen and make the flying player animation
+	# If player dies, we pause the game, blink the screen and make 
+	# the player fly out of the screen
+	animation = "dying"
 	pausable = 0
 	DIVGlobals.game_paused = 1
 	animated_sprite.pause()
-	
+
 	DIV.white_blink_screen()
 	while exists("white_blink_screen"):
 		await frame()
 	await frame(4)
-	animation = "dying"
 	
 	play_sound("4",0)
 	
@@ -71,8 +76,8 @@ func player_defeated_sequence():
 		y_inc += 0.5
 		y += y_inc
 		x += x_inc
-		if collision("left_wall"): x_inc = abs(x_inc)
-		if collision("right_wall"): x_inc = -abs(x_inc)
+		if collision("left_wall"): x_inc = abs(x_inc); flags = 1 
+		if collision("right_wall"): x_inc = -abs(x_inc); flags = 0
 		
 		await frame()
 	play_sound("5",0)

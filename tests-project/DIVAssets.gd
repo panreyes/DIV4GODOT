@@ -4,43 +4,100 @@ var fpgs = {}
 var musics = {}
 var sounds = {}
 var animations = {}
+const force_use_filelist = true
 @onready var music_player = AudioStreamPlayer.new()
 
 func _init():
 	preload_fpgs()
 	preload_musics()
 	preload_sounds()
+	#load_assets("res://DIV/music/","ogg","load_music")
 
 func _ready():
 	add_child(music_player)
 
+func generate_file_list_json(path, extension):
+	var file_list = {}
+	var i = 0
+	
+	for file in DirAccess.get_files_at(path):
+		if file.get_extension() == extension:
+			i += 1
+			file_list[i] = file
+	
+	var fp = FileAccess.open(path + "/filelist.dat", FileAccess.WRITE)
+	fp.store_var(file_list)
+	fp.close()
+	
+	return file_list
+	
+func generate_dir_list_json(path):
+	var dir_list = {}
+	var i = 0
+	for dir in DirAccess.get_directories_at(path):
+		i += 1
+		dir_list[i] = dir
+	
+	var fp = FileAccess.open(path + "/dirlist.dat", FileAccess.WRITE)
+	fp.store_var(dir_list)
+	fp.close()
+	
+	return dir_list
+
+func load_assets(path,extension,callback_load_function_name):
+	var file_list
+	
+	if OS.has_feature("editor") and !force_use_filelist:
+		file_list = generate_file_list_json(path, extension)
+	else:
+		var fp = FileAccess.open(path + "/filelist.dat", FileAccess.READ)
+		file_list = fp.get_var()
+	
+	if file_list == null:
+		return
+	
+	for file in file_list.values():
+		call(callback_load_function_name, path + "/" + file)
+		#print(file)
+
 func preload_musics():
-	for file in DirAccess.get_files_at("res://DIV/music/"):
-		if file.get_extension() == "ogg":
-			load_music(file)
+	load_assets("res://DIV/music","ogg","load_music")
 
 func load_music(file):
-	musics[file.get_basename()] = load("res://DIV/music/" + file)
+	musics[file.get_file().get_basename()] = load(file)
 
 func preload_sounds():
-	for file in DirAccess.get_files_at("res://DIV/sound/"):
-		if file.get_extension() == "wav":
-			load_sound(file)
+	load_assets("res://DIV/sound","wav","load_sound")
 
 func load_sound(file):
-	sounds[file.get_basename()] = load("res://DIV/sound/" + file)
+	sounds[file.get_file().get_basename()] = load(file)
 
 func preload_fpgs():
-	for dir in DirAccess.get_directories_at("res://DIV/fpg"):
-		load_fpg(dir)
+	var dir_list
+	
+	if OS.has_feature("editor") and !force_use_filelist:
+		dir_list = generate_dir_list_json("res://DIV/fpg")
+	else:
+		var fp = FileAccess.open("res://DIV/fpg/dirlist.dat", FileAccess.READ)
+		dir_list = fp.get_var()
+	
+	for dir in dir_list.values():
+		load_fpg("res://DIV/fpg/" + dir)
 
 func load_fpg(dir):
 	var fpg = {}
-	for file in DirAccess.get_files_at("res://DIV/fpg/" + dir):
-		if file.get_extension() == "png":
-			fpg[file.get_basename()] = load("res://DIV/fpg/" + dir + "/" + file)
+	var file_list
 	
-	fpgs[dir] = fpg
+	if OS.has_feature("editor") and !force_use_filelist:
+		file_list = generate_file_list_json(dir, "png")
+	else:
+		var fp = FileAccess.open(dir + "/filelist.dat", FileAccess.READ)
+		file_list = fp.get_var()
+	
+	for file in file_list.values():
+		fpg[file.get_file().get_basename()] = load(dir + "/" + file)
+	
+	fpgs[dir.get_file()] = fpg
 
 func get_graph_texture(file, graph):
 	if fpgs.has(file):

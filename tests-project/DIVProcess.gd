@@ -244,6 +244,12 @@ func process_fade_off(speed):
 		await get_tree().process_frame
 
 func exists(type):
+	if type == null:
+		return false
+	
+	if type is Sprite2D:
+		return true
+	
 	var nodes = get_tree().get_nodes_in_group(type)
 	
 	for node in nodes:

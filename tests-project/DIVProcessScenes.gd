@@ -67,6 +67,7 @@ func instance(process_type, arg1 = null, arg2 = null, arg3 = null, arg4 = null, 
 		print("Error: Can't instance " + process_type)
 		return null
 	
-	var pid = load(scene_paths[process_type]).instantiate()
-	pid.set_args([arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9])
-	get_tree().get_root().add_child(pid)
+	var node = load(scene_paths[process_type]).instantiate()
+	node.set_args([arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9])
+	get_tree().get_root().add_child(node)
+	return node

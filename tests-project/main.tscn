@@ -55,7 +55,7 @@ polygon = PackedVector2Array(1041, 686, 1038, 709, 232, 711, 233, 687)
 position = Vector2(640, 621)
 scale = Vector2(1.37, 1.37)
 
-[node name="RichTextLabel" type="RichTextLabel" parent="."]
+[node name="fps_text" type="RichTextLabel" parent="."]
 offset_left = 17.0
 offset_top = 25.0
 offset_right = 57.0
