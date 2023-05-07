@@ -4,7 +4,7 @@ var fpgs = {}
 var musics = {}
 var sounds = {}
 var animations = {}
-const force_use_filelist = true
+const force_use_filelist = false
 @onready var music_player = AudioStreamPlayer.new()
 
 func _init():
