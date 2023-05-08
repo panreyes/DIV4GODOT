@@ -6,12 +6,14 @@ func init():
 	start_game()
 
 func start_game():
-	play_music("1",0)
+	#play_music("1",0)
+	pass
 
 func process():
 	# Wait a few frames until the tree is ready
 	await frame(10)
 	
+	DIV.bola_test(640, 100, 100, 1)
 	while 1:
 		$fps_text.text = str(Engine.get_frames_per_second())
 		

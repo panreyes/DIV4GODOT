@@ -18,9 +18,8 @@ config/icon="res://icon.png"
 [autoload]
 
 DIVGlobals="*res://DIVGlobals.gd"
-DIVAssets="*res://DIVAssets.gd"
 DIV="*res://DIVProcesses/DIV.gd"
-DIVProcessScenes="*res://DIVProcessScenes.gd"
+DIVAssets="*res://DIVAssets.gd"
 
 [display]
 

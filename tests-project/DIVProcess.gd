@@ -75,7 +75,7 @@ func _ready():
 		if process_type == "":
 			process_type = get_name()
 		else:
-			DIVProcessScenes.add_divprocess(get_scene_file_path())
+			DIVAssets.add_divprocess(get_scene_file_path())
 	
 	instance_name = get_name()
 	id = get_instance_id()
@@ -204,6 +204,9 @@ func update_godot_values_from_div_values():
 	
 	if flags == 2 or flags == 3:
 		scale.y = -scale.y
+	
+	if file != "" and graph > 0:
+		update_graph()
 
 func _process(_delta):
 	if !animated_sprite:

@@ -4,14 +4,15 @@ var fpgs = {}
 var musics = {}
 var sounds = {}
 var animations = {}
-const force_use_filelist = false
+var scene_paths = {}
+const force_use_filelist = true
 @onready var music_player = AudioStreamPlayer.new()
 
 func _init():
 	preload_fpgs()
 	preload_musics()
 	preload_sounds()
-	#load_assets("res://DIV/music/","ogg","load_music")
+	preload_divprocesses()
 
 func _ready():
 	add_child(music_player)
@@ -58,7 +59,6 @@ func load_assets(path,extension,callback_load_function_name):
 	
 	for file in file_list.values():
 		call(callback_load_function_name, path + "/" + file)
-		#print(file)
 
 func preload_musics():
 	load_assets("res://DIV/music","ogg","load_music")
@@ -165,3 +165,102 @@ func add_animation(file, animation_name, frame_delay, first_frame, last_frame = 
 	
 	return true
 	#animated_sprite.frame_delay = frame_delay
+
+func preload_divprocesses():
+	var cache_needs_update = false
+	var folder_path = "res://DIVProcesses"
+	var process_type
+	var file_list = []
+	var fp
+	
+	if OS.has_feature("editor") and !force_use_filelist:
+		# Check if this is the first run
+		if DIV == null:
+			cache_needs_update = true
+		
+		# Get DIVProcesses from scenes:
+		for file in DirAccess.get_files_at(folder_path):
+			if file.get_extension() == "tscn":
+				file_list += [file]
+				process_type = file.get_basename()
+				add_divprocess(folder_path + "/" + file)
+				if !cache_needs_update:
+					if !DIV.has_method(process_type):
+						print("Method does not exist ", process_type)
+						cache_needs_update = true
+		
+		# Check for other DIVProcesses from scripts:
+		for file in DirAccess.get_files_at(folder_path):
+			if file.get_extension() == "gd" and file != "DIV.gd":
+				process_type = file.get_basename()
+				if !scene_paths.has(process_type):
+					file_list += [file]
+					add_divprocess(folder_path + "/" + file)
+					if !cache_needs_update:
+						if !DIV.has_method(process_type):
+							print("Method does not exist ", process_type)
+							cache_needs_update = true
+		
+	if cache_needs_update:
+		generate_cache_file()
+		
+		# Update filelist.dat
+		fp = FileAccess.open(folder_path + "/filelist.dat", FileAccess.WRITE)
+		fp.store_var(file_list)
+		
+	else: # Not in editor or force_use_filelist flag enabled
+		fp = FileAccess.open(folder_path + "/filelist.dat", FileAccess.READ)
+		file_list = fp.get_var()
+		
+		for file in file_list:
+			process_type = file.get_basename()
+			add_divprocess(folder_path + "/" + file)
+	
+
+func add_divprocess(file_path):
+	var process_type = file_path.get_file().get_basename()
+	if scene_paths.has(process_type):
+		return
+	scene_paths[process_type] = file_path
+	load(file_path) # For caching purposes
+
+func generate_cache_file():
+	var source_code
+	var process_type
+	
+	source_code = "extends Node2D
+
+# Attention! This file is generated automatically by DIVAssets.gd.
+# Any manual changes will be overwritten!
+
+func _ready():
+	pass
+"
+	
+	for scene in scene_paths:
+		process_type = scene.get_file().get_basename()
+		source_code += "
+func " + process_type + "(arg1 = null, arg2 = null, arg3 = null, arg4 = null, arg5 = null, arg6 = null, arg7 = null, arg8 = null, arg9 = null):
+	return DIVAssets.instance(\"" + process_type +  "\", arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9)	
+"
+	var file := FileAccess.open("res://DIVProcesses/DIV.gd", FileAccess.WRITE)
+	file.store_string(source_code)
+	
+	print("Regenerated DIV.gd, launch again!")
+
+func instance(process_type, arg1 = null, arg2 = null, arg3 = null, arg4 = null, arg5 = null, arg6 = null, arg7 = null, arg8 = null, arg9 = null):
+	if !scene_paths.has(process_type):
+		print("Error: Can't instance " + process_type)
+		return null
+	
+	var node
+	if scene_paths[process_type].get_extension() == "tscn":
+		node = load(scene_paths[process_type]).instantiate()
+	else: # .gd script only, not a full scene
+		node = DIVProcess.new()
+		node.set_script(load(scene_paths[process_type]))
+		node.process_type = process_type
+	
+	node.set_args([arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9])
+	get_tree().get_root().add_child(node)
+	return node
