@@ -5,7 +5,7 @@ var musics = {}
 var sounds = {}
 var animations = {}
 var scene_paths = {}
-const force_use_filelist = true
+const force_use_filelist = false
 @onready var music_player = AudioStreamPlayer.new()
 
 func _init():

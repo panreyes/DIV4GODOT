@@ -13,7 +13,9 @@ func process():
 	# Wait a few frames until the tree is ready
 	await frame(10)
 	
-	DIV.bola_test(640, 100, 100, 1)
+	# This is a DIVProcess without a scene
+	# DIV.bola_test(640, 100, 100, 1)
+	
 	while 1:
 		$fps_text.text = str(Engine.get_frames_per_second())
 		
