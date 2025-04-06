@@ -1,5 +1,5 @@
 # DIV4GODOT
-Framework to use DIV Games Studio's syntax in Godot 4.x GDScript,
+(Proof of concepto of a )Framework to use DIV Games Studio's syntax in Godot 4.x GDScript,
 Developed by Pablo Navarro,
 
 ## Introduction
